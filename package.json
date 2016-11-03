@@ -15,7 +15,7 @@
     "postinstall": "npm run build",
     "clean": "rimraf coverage dist",
     "build": "npm run clean && npm run build:transpile",
-    "start": "cross-env PROJECT_ENV=staging node --require babel-polyfill ./dist/app.js",
+    "start": "cross-env PROJECT_ENV=staging pm2 start ./dist/app.js",
     "dev": "cross-env PROJECT_ENV=local nodemon --exec babel-node -- ./src/app.js",
     "local:start": "cross-env PROJECT_ENV=local daemon:start",
     "local:stop": "cross-env PROJECT_ENV=local daemon:stop",
@@ -40,10 +40,11 @@
     "debug": "^2.2.0",
     "koa": "^2.0.0",
     "koa-body": "^1.4.0",
+    "koa-convert": "^1.2.0",
     "koa-helmet": "^2.0.0",
     "koa-morgan": "^1.0.1",
     "koa-router": "^7.0.1",
-    "koa-convert": "^1.2.0",
+    "pm2": "^2.0.19",
     "ramda": "^0.22.1",
     "winston": "^2.2.0"
   },
@@ -64,7 +65,8 @@
     "rimraf": "^2.5.3",
     "sinon": "^1.17.3",
     "supertest": "^2.0.0",
-    "supertest-as-promised": "^4.0.1"
+    "supertest-as-promised": "^4.0.1",
+    "throng": "^4.0.0"
   },
   "nyc": {
     "check-coverage": true,
