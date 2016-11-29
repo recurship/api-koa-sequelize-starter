@@ -7,7 +7,7 @@ describe('Root', () => {
   describe('GET /', () => {
     it('should result in API name response', () => {
       return request.get('/')
-        .expect(200, 'API Koa Starter from Rangle.io');
+        .expect(200, 'API is available');
     });
   });
 });

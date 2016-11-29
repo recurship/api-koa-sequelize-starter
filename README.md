@@ -1,4 +1,4 @@
-# Rangle Koa-starter
+# KoaJS2-starter
 
 ## Quick Start
 
@@ -50,12 +50,3 @@ Build (or update) the API documentation to `api.html` in the root:
 ```sh
 yarn raml
 ```
-
-## TODO:
-
-* Basic prodmode clustering with throng?
-* Basic auth endpoint for other starters to use?
-  * with caveats - big blurb on session management
-  * protected whoami?
-* Jasmine instead of mocha?
-* Update rangle-starter CLI, README.
