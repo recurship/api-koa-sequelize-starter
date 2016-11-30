@@ -14,6 +14,9 @@ Run in dev mode, restarting the server on file changes:
 
 ```sh
 yarn dev
+
+# If you want to generate fresh tables
+resetdb=true yarn dev
 ```
 
 Run unit tests:

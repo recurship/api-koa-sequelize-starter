@@ -1,5 +1,5 @@
 import koaRouter from 'koa-router';
-import { demo, error, errorWithoutMessage } from './demo.controller';
+import { get, post, demo, error, errorWithoutMessage } from './demo.controller';
 import { validateParams } from '../../middleware/validate-params';
 
 const match = regex => term => regex.test(term);
@@ -21,5 +21,7 @@ export const demoRouter = koaRouter()
     validateParams(['request', 'body', 'foo'], ['bar']),
     demo)
   .get('/error', error)
-  .get('/error-without-message', errorWithoutMessage);
+  .get('/error-without-message', errorWithoutMessage)
+  .get('/', get)
+  .post('/',validateParams(['request','body'], ['name']), post);
 

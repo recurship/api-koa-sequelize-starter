@@ -1,3 +1,20 @@
+import Sequelize from 'sequelize';
+
+import Demo from './demo.model';
+import winston from 'winston';
+
+export const post = (ctx) => {
+  return Demo.create(Object.assign({}, ctx.request.body)).then(() => {
+    ctx.body = 'OK';
+  });
+};
+
+export async function get(ctx) {
+  return Demo.findAll({}).then((demos) => {
+    ctx.body = demos;
+  });
+}
+
 export async function demo(ctx) {
   ctx.body = 'It works!';
 }
