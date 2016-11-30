@@ -1,5 +1,5 @@
 import koaRouter from 'koa-router';
-import { get, post, demo, error, errorWithoutMessage } from './demo.controller';
+import * as controller from './demo.controller';
 import { validateParams } from '../../middleware/validate-params';
 
 const match = regex => term => regex.test(term);
@@ -8,20 +8,8 @@ const match = regex => term => regex.test(term);
  * A simple module to demonstrate declarative parameter validation.
  */
 export const demoRouter = koaRouter()
-  .get(
-    '/foo-is-required',
-    validateParams(['query'], ['foo']),
-    demo)
-  .get(
-    '/foo-must-be-numeric',
-    validateParams(['query'], ['foo'], match(/^[0-9]*$/)),
-    demo)
-  .post(
-    '/body-must-have-foo-with-bar',
-    validateParams(['request', 'body', 'foo'], ['bar']),
-    demo)
-  .get('/error', error)
-  .get('/error-without-message', errorWithoutMessage)
-  .get('/', get)
-  .post('/',validateParams(['request','body'], ['name']), post);
-
+  .get('/', controller.get)
+  .post('/', validateParams(['request', 'body'], ['name']), controller.post)
+  .get('/:id', validateParams(['params'], ['id'], match(/^[0-9]*$/)), controller.getById)
+  .delete('/:id', validateParams(['params'], ['id'], match(/^[0-9]*$/)), controller.del)
+  .put('/:id', validateParams(['params'], ['id'], match(/^[0-9]*$/)), controller.put);

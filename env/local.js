@@ -7,6 +7,6 @@ module.exports = {
     host: 'localhost',
     user: 'root',
     password: 'test',
-    database: 'ucc-v3-backend'
-  }
+    database: 'ucc-v3-backend',
+  },
 };

@@ -2,35 +2,59 @@ displayName: |
   Demo endpoints
 description: |
   Some demo endpoints to show how various features work, including this documentation.
-/foo-is-required:
+/:
   get:
     description: |
-      Use is to demonstrate request validation is working as intended and forces params to be provided.
+      Get all the demos
     queryParameters:
-      foo:
-        type: string
-        required: true
-        example: "bar"
     responses:
       200:
         body:
           application/json:
             example: |
-              'It works!'
+              []
     securedBy: [none]
-/foo-must-be-numeric:
+
+/{id}:
   get:
     description: |
-      Use is to demonstrate request validation is working as intended and enforces numeric content of params.
-    queryParameters:
-      foo:
-        type: number
-        required: true
-        example: "123"
+      Get a single demo by id
     responses:
       200:
         body:
           application/json:
             example: |
-              'It works!'
+              {
+                "id": 1,
+                "name": "helloWorld4",
+                "createdAt": "2016-11-30T04:06:37.000Z",
+                "updatedAt": "2016-11-30T04:06:37.000Z"
+              }
+      404:
+        body:
+          plain/text:
+            example: |
+              Not Found
+    securedBy: [none]
+
+  put:
+    description: |
+      Update a single demo by id
+    responses:
+      200:
+        body:
+          plain/text:
+            example: |
+              OK
+    securedBy: [none]
+
+  delete:
+    description: |
+      Delete a single demo by id
+    responses:
+      200:
+        body:
+          plain/text:
+            example: |
+              OK
     securedBy: [none]

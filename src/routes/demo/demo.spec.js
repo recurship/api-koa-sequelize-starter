@@ -1,84 +1,68 @@
 import supertest from 'supertest-as-promised';
+import chai from 'chai';
 import { app } from '../../app';
+import Demo from './demo.model';
 
 const request = supertest.agent(app.listen());
+const expect = chai.expect;
 
 describe('Demo', () => {
-  describe('GET /demo/foo-is-required', () => {
-    it('should work if the parameter is present', () => {
-      return request.get('/demo/foo-is-required')
-        .query({ foo: 'abc' })
-        .expect(200, 'It works!');
-    });
+  beforeEach(() => {
+    return Demo.destroy({ truncate: true });
+  });
 
-    it('should result in a 400 is parameter is missing', () => {
-      return request.get('/demo/foo-is-required')
-        .expect(400, 'foo is required.');
+  describe('GET /demo', () => {
+    it('should return a list of items', () => {
+      return request.get('/demo')
+        .expect(200, []);
     });
   });
 
-  describe('GET /demo/foo-must-be-numeric', () => {
-    it('should work if the parameter is valid', () => {
-      return request.get('/demo/foo-must-be-numeric')
-        .query({ foo: 123 })
-        .expect(200, 'It works!');
+  describe('GET /demo/{id}', () => {
+    it('should return a 404 if object not found', () => {
+      return request.get('/demo/12')
+        .expect(404, 'Not Found');
     });
 
-    it('should result in a 400 if the parameter is not numeric', () => {
-      return request.get('/demo/foo-must-be-numeric')
-        .query({ foo: 'abc' })
-        .expect(400, 'foo is invalid.');
-    });
-
-    it('should result in a 400 if the parameter mixes numbers with letters', () => {
-      return request.get('/demo/foo-must-be-numeric')
-        .query({ foo: 'abc123' })
-        .expect(400, 'foo is invalid.');
-    });
-
-    it('should result in a 400 if the parameter is missing', () => {
-      return request.get('/demo/foo-must-be-numeric')
-        .expect(400, 'foo is required.');
+    it('should return a demo object', (done) => {
+      Demo.create({ id: 1, name: 'Hello' }).then(() => {
+        request.get('/demo/1')
+        .then((res) => {
+          expect(res.status).to.equal(200);
+          expect(res.body).to.have.property('name');
+          expect(res.body.name).to.equal('Hello');
+          done();
+        });
+      });
     });
   });
 
-  describe('POST /demo/body-must-have-foo-with-bar', () => {
-    it('should work if the body has foo with bar', () => {
-      return request.post('/demo/body-must-have-foo-with-bar')
-        .send({
-          foo: {
-            bar: 'abc',
-          },
-        })
-        .expect(200, 'It works!');
-    });
-
-    it('should result in a 400 is foo container is missing', () => {
-      return request.post('/demo/body-must-have-foo-with-bar')
-        .send({})
-        .expect(400, 'Bad request');
-    });
-
-    it('should result in a 400 is foo container does not have bar', () => {
-      return request.post('/demo/body-must-have-foo-with-bar')
-        .send({
-          foo: { },
-        })
-        .expect(400, 'bar is required.');
+  describe('PUT /demo/{id}', (done) => {
+    Demo.create({ id: 1, name: 'Hello' }).then(() => {
+      request.put('/demo/1')
+      .send({ name: 'HelloWorld' })
+      .then((res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body).to.equal('OK');
+        Demo.find({ id: 1 }).then((demo) => {
+          expect(demo.name).to.equal('HelloWorld');
+          done();
+        });
+      });
     });
   });
 
-  describe('GET /demo/error', () => {
-    it('should result in 500 app error response', () => {
-      return request.get('/demo/error')
-        .expect(500, 'App Error (this is intentional)!');
-    });
-  });
-
-  describe('GET /demo/error-without-message', () => {
-    it('should result in 500 app error response', () => {
-      return request.get('/demo/error-without-message')
-        .expect(500, '');
+  describe('DELETE /demo/{id}', (done) => {
+    Demo.create({ id: 1, name: 'Hello' }).then(() => {
+      request.delete('/demo/1')
+      .then((res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body).to.equal('OK');
+        Demo.findAll({}).then((demos) => {
+          expect(demos).to.equal([]);
+          done();
+        });
+      });
     });
   });
 });
